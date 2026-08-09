@@ -1,11 +1,12 @@
-<script setup></script>
+<script setup>
+const counter = 0;
+
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <h1>Counter is {{ counter }}</h1>
+  <button @click="increment">Increment +1</button>
+  <button @click="decrement">Decrement -1</button>
 </template>
 
 <style scoped></style>
