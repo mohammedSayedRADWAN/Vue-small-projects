@@ -16,7 +16,32 @@ function addTask(){
     });
     newTask.value=''
   }
-
+function removeTask(id){
+  tasks.value=tasks.value.filter((t)=>t.id!=id)
+}
+const editingId=ref(null);
+const buffering=ref('')
+function editTask(task){
+  editingId.value=task.id;
+  buffering.value=task;
+}
+function canselEdit(){
+  editingId.value=null;
+  buffering.value=''
+}
+function finishEdit(task) {
+  if (editingId.value!=task.id) {
+    return;
+  }
+  const trimmed=buffering.value.text.trim();
+  if (!trimmed) {
+    removeTask(task.id);
+  }else{
+    task.text=trimmed;
+  }
+  canselEdit();
+  
+}
 </script>
 <template>
  <div id="wrapper">
@@ -24,8 +49,30 @@ function addTask(){
   <div class="input-row">
     <!-- v- model it is way to binding data known as two binding way-->
     <input type="text" placeholder="add task here" v-model="newTask">
-    <button>Add</button>
+    <button @click="addTask">Add</button>
   </div>
+
+  <!--show tasks-->
+  <ul class="task-list">
+    <li v-for="task in tasks" :key="task.id"  :class="{done:task.completed , editing:editingId==task.id}">
+
+
+     <template v-if="editingId!=task.id">
+      <button class="delete" @click="removeTask(task.id)">x</button>
+      <input type="checkbox" v-model="task.completed">
+      <span @click="editTask(task)">{{task.text}}</span>
+      
+     </template>
+     <!--show editing parts if editingId==task.id-->
+     <template v-else>
+      <input type="checkbox" v-model="task.completed">
+      <input type="text" v-model="buffering.text" class="edit-inpu">
+      <button class="save" @click="finishEdit(task)">save</button>
+      <button class="cancel" @click="canselEdit()">cancel</button>
+     </template>
+      
+    </li>
+  </ul>
  </div>
 </template>
 
@@ -53,5 +100,47 @@ button{
   border-radius: 6px;
   border: 1px solid #ccc;
   cursor: pointer;
+}
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+.filters button.active {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+}
+.task-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+.task-list li.done span {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.fav {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.delete {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.edit-input {
+  flex-grow: 1;
 }
 </style>
