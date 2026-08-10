@@ -66,7 +66,13 @@ function finishEdit(task) {
      <!--show editing parts if editingId==task.id-->
      <template v-else>
       <input type="checkbox" v-model="task.completed">
-      <input type="text" v-model="buffering.text" class="edit-inpu">
+      <!--event directives and binding shourtcut ():)-->
+      <input type="text" v-model="buffering.text" class="edit-inpu" 
+    
+      @keyup.enter="finishEdit(task)"  
+      @keydown.esc="canselEdit"
+      @blur="finishEdit(task)"
+      :ref="(el)=>el&&el.focus()">
       <button class="save" @click="finishEdit(task)">save</button>
       <button class="cancel" @click="canselEdit()">cancel</button>
      </template>
