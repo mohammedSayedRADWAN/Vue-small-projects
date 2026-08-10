@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref , computed} from 'vue';
 const newTask = ref('');
 
 const tasks=ref([])
@@ -42,6 +42,16 @@ function finishEdit(task) {
   canselEdit();
   
 }
+function favToggle(task) {
+  task.favorite=!task.favorite;
+  
+}
+
+//filters
+const search=ref('')
+const activeSearch=ref('All')
+const filters=['All','Active','Completed','Favorites']
+
 </script>
 <template>
  <div id="wrapper">
@@ -51,24 +61,36 @@ function finishEdit(task) {
     <input type="text" placeholder="add task here" v-model="newTask">
     <button @click="addTask">Add</button>
   </div>
+<!--search-->
+<input type="text" placeholder="search here" v-model="search">
+<div 
+@click="activeSearch=f" 
+class="filters" v-for="f in filters" 
+:class="{activeSearch:activeSearch===f}"
+:key="f">
+
+{{ f }}
+</div>
 
   <!--show tasks-->
   <ul class="task-list">
     <li v-for="task in tasks" :key="task.id"  :class="{done:task.completed , editing:editingId==task.id}">
 
-
      <template v-if="editingId!=task.id">
       <button class="delete" @click="removeTask(task.id)">x</button>
+      <button class="fav" @click="favToggle(task)">
+        {{ task.favorite ? '⭐':'☆' }}
+      </button>
       <input type="checkbox" v-model="task.completed">
       <span @click="editTask(task)">{{task.text}}</span>
-      
      </template>
+
      <!--show editing parts if editingId==task.id-->
      <template v-else>
       <input type="checkbox" v-model="task.completed">
       <!--event directives and binding shourtcut ():)-->
       <input type="text" v-model="buffering.text" class="edit-inpu" 
-    
+
       @keyup.enter="finishEdit(task)"  
       @keydown.esc="canselEdit"
       @blur="finishEdit(task)"
