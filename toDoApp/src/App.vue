@@ -50,8 +50,28 @@ function favToggle(task) {
 //filters
 const search=ref('')
 const activeSearch=ref('All')
-const filters=['All','Active','Completed','Favorites']
+const filters=['All','Incompleted','Completed','Favorites']
+const filterdTasks = computed(() => {
+  return tasks.value.filter((t) => {
+    const matchesSearch = t.text
+      .toLowerCase()
+      .includes(search.value.toLowerCase());
 
+    if (activeSearch.value === 'Incompleted') {
+      return matchesSearch && !t.completed;
+    }
+
+    if (activeSearch.value === 'Completed') {
+      return matchesSearch && t.completed;
+    }
+
+    if (activeSearch.value === 'Favorites') {
+      return matchesSearch && t.favorite;
+    }
+
+    return matchesSearch;
+  });
+});
 </script>
 <template>
  <div id="wrapper">
@@ -74,7 +94,8 @@ class="filters" v-for="f in filters"
 
   <!--show tasks-->
   <ul class="task-list">
-    <li v-for="task in tasks" :key="task.id"  :class="{done:task.completed , editing:editingId==task.id}">
+    <li v-for="task in filterdTasks" :key="task.id"  
+    :class="{done:task.completed , editing:editingId==task.id}">
 
      <template v-if="editingId!=task.id">
       <button class="delete" @click="removeTask(task.id)">x</button>
