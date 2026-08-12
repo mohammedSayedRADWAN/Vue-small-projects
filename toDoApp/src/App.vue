@@ -1,5 +1,5 @@
 <script setup>
-import { ref , computed} from 'vue';
+import { ref , computed, watch, onMounted} from 'vue';
 const newTask = ref('');
 
 const tasks=ref([])
@@ -72,6 +72,17 @@ const filterdTasks = computed(() => {
     return matchesSearch;
   });
 });
+
+// save items to local storage
+watch(tasks,()=>{
+  localStorage.setItem('tasks',JSON.stringify(tasks.value))  
+},{deep:true})
+onMounted(()=>{
+  const saveTasks=localStorage.getItem('tasks')
+  if(saveTasks){
+    tasks.value=JSON.parse(saveTasks)
+  }
+})
 </script>
 <template>
  <div id="wrapper">
