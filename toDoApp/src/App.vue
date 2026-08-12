@@ -84,12 +84,15 @@ const filterdTasks = computed(() => {
 <!--search-->
 <input type="text" placeholder="search here" v-model="search">
 <div 
-@click="activeSearch=f" 
-class="filters" v-for="f in filters" 
+
+class="filters" >
+
+<button @click="activeSearch=f"  
+v-for="f in filters" 
 :class="{activeSearch:activeSearch===f}"
 :key="f">
-
 {{ f }}
+</button>
 </div>
 
   <!--show tasks-->
