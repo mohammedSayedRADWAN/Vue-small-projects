@@ -1,13 +1,21 @@
 <template>
-    <RoundedCard>
- <div class="p-4">
-                            vue course, 100 , learn from scratch and master the fundamentals 
+    <CardSection>
+
+
+        <div class="flex justify-between items-center">
+            <div>
+                vue course, 100 , learn from scratch and master the fundamentals
             </div>
-    </RoundedCard>
-       
-    
+            <RoundedButton @click="console.log('report')" variant="danger">Report</RoundedButton>
+        </div>
+
+
+    </CardSection>
+
+
+
 </template>
 <script setup>
-import RoundedCard from "@/components/RoundedCard.vue";
-
+import RoundedButton from "@/components/RoundedButton.vue";
+import CardSection from "@/components/CardSection.vue";
 </script>
