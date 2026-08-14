@@ -3,7 +3,8 @@
   <div class="p-4 space-y-8">
     <h1 class="text-4xl font-medium">cources hub</h1>
     <h2 class="text-2xl font-medium">all courcess</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div v-if="flag" class="text-2xl font-medium">courcess are loading...</div>
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <course-items v-for="course in courses" :key="course.id" :title="course.title" :price="course.price"
         :description="course.description" @click="console.log('button clicked')"></course-items>
 
@@ -22,11 +23,19 @@ import BookingItem from "@/components/boockingItem.vue";
 
 
 const courses = ref([])
+const flag = ref(false)
 const fetchCources = async () => {
+  flag.value = true
 
-  const res = await fetch("http://localhost:5000/courses")
-  courses.value = await res.json()
+  try {
+    const res = await fetch("http://localhost:5000/courses")
+    courses.value = await res.json()
 
+  } catch (e) {
+    console.log(e)
+  } finally {
+    flag.value = false
+  }
 }
 
 onMounted(() => {
