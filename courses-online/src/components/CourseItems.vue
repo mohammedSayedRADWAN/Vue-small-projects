@@ -15,7 +15,7 @@
 
 <script setup>
 import CardSections from '@/components/CardSection.vue'
-import RoundedButton from '@/components/RoundedCard.vue'
+import RoundedButton from '@/components/RoundedButton.vue'
 
 defineProps({
     title: String,

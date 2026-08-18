@@ -10,11 +10,16 @@
     <div v-if="flag" class="text-2xl font-medium">courcess are loading...</div>
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <course-items v-for="course in courses" :key="course.id" :title="course.title" :price="course.price"
-        :description="course.description" @click="console.log('button clicked')"></course-items>
+        :description="course.description" @click="registerCourse(course)"></course-items>
 
     </div>
+
     <h2 class="text-2xl font-medium">your cources</h2>
-    <div class="grid grid-cols-1 gap-4">
+    <div v-if="flag" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <SkelatonBookingIten v-for="i in 2"></SkelatonBookingIten>
+
+    </div>
+    <div v-else class="grid grid-cols-1 gap-4">
       <BookingItem v-for="i in 2" :key="i" />
     </div>
   </div>
@@ -25,6 +30,7 @@ import { ref, onMounted } from "vue";
 import CourseItems from "@/components/CourseItems.vue";
 import BookingItem from "@/components/boockingItem.vue";
 import SkelatonCourses from "@/components/SkelatonCourses.vue";
+import SkelatonBookingIten from "@/components/SkelatonBookingIten.vue";
 
 
 const courses = ref([])
@@ -42,7 +48,27 @@ const fetchCources = async () => {
     flag.value = false
   }
 }
+const registerCourse = async (course) => {
+  const newCourse = {
+    id: course.id,
+    title: course.title,
+    price: course.price,
+    description: course.description,
+    status: "pending"
+  }
+  const response = await fetch("http://localhost:5000/bookings", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...newCourse,
+      status: "confirmed"
+    }),
 
+  })
+
+}
 onMounted(() => {
   fetchCources()
 })
